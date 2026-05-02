@@ -8,17 +8,15 @@ import shap
 
 # exported file names from training
 model_filename = 'insider_threat_detector.joblib'
-shap_values_filename = 'computed_shap_values.joblib'
+# shap_values_filename = 'computed_shap_values.joblib'
 explainer_filename = 'explainer.joblib'
 
 # read in insider threat data
 insider_threat_data = pd.read_csv('insider_threat_clean_dataset.csv')
 
-
 # load trained model from file
 trained_model = joblib.load(model_filename)
-# load shap values
-loaded_shap_values = joblib.load(shap_values_filename)
+
 # load explainer value
 explainer = joblib.load(explainer_filename)
 
@@ -67,10 +65,13 @@ new_df_2 = pd.DataFrame([new_data_2])
 # y_pred = trained_model.predict(new_df_2)
 # print('second prediction:', y_pred)
 
+print('feature length', len(['employee_classification','total_printed_pages','num_printed_pages_off_hours','total_files_burned','burned_from_other','is_abroad','trip_day_number','hostility_country_level','num_entries','num_unique_campus','late_exit_flag','entry_during_weekend'
+]))
 
 def predict_and_explain(model, shap_explainer, input_data_frame_x, max_top_features=5):
 
     prediction_shap_values =  shap_explainer.shap_values(input_data_frame_x)
+    print('computed shap values:', prediction_shap_values, type(prediction_shap_values))
     feature_contributions_array = []#shap_explainer.shap_values(input_data_frame_x)[1] # feature contributions
     print('feature contri:', feature_contributions_array)
     # average model output for random forest classifier
