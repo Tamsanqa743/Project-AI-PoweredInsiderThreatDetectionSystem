@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import shap
-
+import matplotlib
 
 # exported file names from training
 model_filename = 'insider_threat_detector.joblib'
@@ -58,10 +58,10 @@ new_df = pd.DataFrame([new_data])
 new_df_2 = pd.DataFrame([new_data_2])
 
 
-# y_pred = trained_model.predict(new_df)
+y_pred = trained_model.predict(new_df)[0] # extract prediction value into int
 
 
-# print('first prediction', y_pred)
+print('first prediction', y_pred)
 # y_pred = trained_model.predict(new_df_2)
 # print('second prediction:', y_pred)
 
@@ -74,11 +74,12 @@ def predict_and_explain(model, shap_explainer, input_data_frame_x, max_top_featu
     to_sort_values = feature_contributions_array # copy feature_contributions_array 
 
     # average model output for random forest classifier
-    base = shap_explainer.expected_value[1]
+    base = shap_explainer.expected_value[class_index]
 
     # make prediction
     prediction = model.predict_proba(input_data_frame_x)
-    prediction_text = f"{prediction[0][0]: .2f}"
+    print("prediction:", prediction)
+    prediction_text = f"{prediction[0][class_index]: .2f}"
 
 
     # explanation string
@@ -86,13 +87,16 @@ def predict_and_explain(model, shap_explainer, input_data_frame_x, max_top_featu
     description += "Key factors:\n"
 
     # rank features by absolute SHAP values to max of max_top_features
-    top_feature_indices = np.argsort(-np.abs(to_sort_values[:,1]))[:max_top_features]
+    top_feature_indices = np.argsort(-np.abs(to_sort_values[:,class_index]))[:max_top_features]
+    print("feature contribution array:", feature_contributions_array)
 
     print("top feature indeces:", top_feature_indices)
-    sorted_feature_contributions = [(to_sort_values[i, 0], to_sort_values[i, 1]) for i in top_feature_indices]
+    sorted_feature_contributions = [(to_sort_values[i, 0], to_sort_values[i, class_index]) for i in top_feature_indices]
     
     for val in sorted_feature_contributions:
-        print("Value:", val[1])
+        print("Value:", val[class_index])
+
+# look into using baseline to influence the explanation in terms of strength of contribution to a predicition
 
     for feature in top_feature_indices:
         contribution = feature_contributions_array[feature][class_index]
@@ -112,8 +116,11 @@ def predict_and_explain(model, shap_explainer, input_data_frame_x, max_top_featu
         description += (f" - {input_data_frame_x.columns[feature]} "
                         f"{strength} {direction} the prediction\n"
         ) 
+
+
+        # shap.plots.waterfall(shap_explainer(input_data_frame_x)[0][0])
     # return description
     return description  
     
 
-print("Expected Malicious prediction:", predict_and_explain(trained_model, explainer, new_df,5))
+print("Expected Malicious prediction:", predict_and_explain(trained_model, explainer, new_df,5, y_pred))
