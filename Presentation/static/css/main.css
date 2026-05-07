@@ -18,3 +18,13 @@ img{
   width: 100px;
   height: 100px;
 }
+
+.content-container{
+  height: 100%;
+  justify-content: center;
+}
+
+#upload-form, .instruction-label{
+  display: flex;
+  justify-content: center;
+}
