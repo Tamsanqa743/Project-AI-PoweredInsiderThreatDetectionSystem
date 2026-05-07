@@ -6,33 +6,22 @@
 
 {% block body%}
 
-<div id="main-page-heading">
-    <h1>Research Output Evaluation System</h1>
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="../static/images/logo.jpg" alt="Bootstrap" width="25" height="20">
+      <b name="headline-text">Insider Threat Detection</b>
+    </a>
+    
+  </div>
+</nav>
+<div class="container">
+    <p>Upload csv file to analyze for malicious behaviour</p>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" id="upload-file" name="file">
+        <button type="submit" class="btn btn-primary">Submit File</button>
+    </form>
 </div>
 
-<div id="input-fields-section">
-    <div id="fields">
-         <div id="research-title-container">
-            <span name="title">Research Title</span>
-            <input type="text" name="" id="research-title" required>
-        </div>
-
-        <div id="author-name">
-            <span name="author-label">Author</span>
-            <input type="text" id="author-name-input" required>
-        </div>
-        <div>
-            <span>Field of Study</span>
-            <input type="text" id="study-field" required>
-        </div>
-        <div class="research-output-container">
-            <span>Research Output</span>
-            <textarea type="text" id="research-output" minlength="10" required></textarea>
-        </div>
-        <div id="submit-btn-container">
-        <button type="submit" id="submit-btn">Submit</button>
-    </div>
-    </div>
-</div>
 
 {% endblock %}

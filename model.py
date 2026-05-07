@@ -21,10 +21,8 @@ for col in columns_to_encode:
 
 
 
-X = insider_threat_data[['employee_classification','total_printed_pages','num_printed_pages_off_hours','total_files_burned','burned_from_other','is_abroad','trip_day_number','hostility_country_level','num_entries','num_unique_campus','late_exit_flag','entry_during_weekend'
+X = insider_threat_data[['total_printed_pages','num_printed_pages_off_hours','total_files_burned','burned_from_other','is_abroad','trip_day_number','num_entries','num_unique_campus','late_exit_flag','entry_during_weekend'
 ]]
-
-# data_subset_x = insider_threat_data.sample(n=5000, random_state=42) # take subset of data for shap_value calculation
 
 y = insider_threat_data[['is_malicious']]
 
@@ -36,9 +34,9 @@ random_forest_model = RandomForestClassifier(random_state=42)
 
 # create parameter grid
 parameter_grid = {
-    'n_estimators': [100, 200, 300],
-    'max_depth': [None, 10, 15, 20],
-    'min_samples_split': [2, 5],
+    'n_estimators': [100, 200],
+    'max_depth': [None, 10, 20],
+    'min_samples_split': [2],
     'min_samples_leaf': [1, 2]
 }
 
@@ -59,9 +57,6 @@ grid_searcher.fit(X_train, y_train)
 
 # filename trained model will be saved as
 filename = 'insider_threat_detector.joblib'
-
-# filename for computed shap values
-shap_values_filename = 'computed_shap_values.joblib'
 
 # filename for expected_value from explainer
 explainer_filename = 'explainer.joblib'
@@ -91,9 +86,6 @@ joblib.dump(final_random_forest_model, filename)
 # initialize explainer
 prediction_explainer = shap.TreeExplainer(final_random_forest_model)
 
-# save explainer expected value
-joblib.dump(prediction_explainer, explainer_filename)
-
 
 y_pred = final_random_forest_model.predict(X_test)
 
@@ -102,3 +94,21 @@ print(accuracy_score(y_test, y_pred))
 
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
+
+new_data_2 = {
+    'total_printed_pages': 12,
+    'num_printed_pages_off_hours': 0,
+    'total_files_burned': 1,
+    'burned_from_other': 0,
+    'is_abroad': 0,
+    'trip_day_number': 0.0,
+    'num_entries': 4,
+    'num_unique_campus': 1,
+    'late_exit_flag': 0,
+    'entry_during_weekend': 0
+}
+
+new_df_2 = pd.DataFrame([new_data_2])
+
+predic = final_random_forest_model.predict(new_df_2)
+print('final pred:', predic[0])

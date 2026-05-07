@@ -62,13 +62,11 @@ y_pred = trained_model.predict(new_df)[0] # extract prediction value into int
 
 
 print('first prediction', y_pred)
-# y_pred = trained_model.predict(new_df_2)
-# print('second prediction:', y_pred)
+y_pred_2 = trained_model.predict(new_df_2)
+print('second prediction:', y_pred_2)
 
-print('feature length', len(['employee_classification','total_printed_pages','num_printed_pages_off_hours','total_files_burned','burned_from_other','is_abroad','trip_day_number','hostility_country_level','num_entries','num_unique_campus','late_exit_flag','entry_during_weekend'
-]))
 
-def predict_and_explain(model, shap_explainer, input_data_frame_x, max_top_features=5, class_index=1):
+def explain_prediction(model, shap_explainer, input_data_frame_x, max_top_features=5, class_index=1):
 
     feature_contributions_array = shap_explainer.shap_values(input_data_frame_x)[0] # feature contributions
     to_sort_values = feature_contributions_array # copy feature_contributions_array 
@@ -117,10 +115,8 @@ def predict_and_explain(model, shap_explainer, input_data_frame_x, max_top_featu
                         f"{strength} {direction} the prediction\n"
         ) 
 
-
-        # shap.plots.waterfall(shap_explainer(input_data_frame_x)[0][0])
     # return description
     return description  
     
 
-print("Expected Malicious prediction:", predict_and_explain(trained_model, explainer, new_df,5, y_pred))
+print("Expected Malicious prediction:", explain_prediction(trained_model, explainer, new_df_2,5, y_pred_2[0]))
