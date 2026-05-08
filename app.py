@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, flash
+from flask import Flask, render_template, url_for, request, flash, jsonify
 from werkzeug.utils import secure_filename
 import os
 from Controllers.file_controller import file_controller
@@ -9,6 +9,7 @@ UPLOAD_FOLDER = os.path.abspath('Uploaded_files/') # folder uploaded files are s
 ALLOWED_EXTENSIONS = {'csv'} # file extensions allowed for upload
 secret_key = 'DHEQJdxagshd2eg623829273273'
 
+file_con = file_controller()
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER # configure upload folder
@@ -22,9 +23,14 @@ def upload():
     '''handle file upload'''
     if request.method == 'POST':
         file = request.files['file']
-        file_controller.file_upload(file, UPLOAD_FOLDER)
+        file_con.file_upload(file, UPLOAD_FOLDER)
         flash("Success")
-    return render_template('index.html')
+    return render_template('analysis.html', saved_filename=file.filename)
+
+
+@app.route('/analyse')
+def analyse():
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)
