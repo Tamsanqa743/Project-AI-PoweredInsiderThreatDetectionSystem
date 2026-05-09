@@ -21,8 +21,7 @@ for col in columns_to_encode:
 
 
 
-X = insider_threat_data[['total_printed_pages','num_printed_pages_off_hours','total_files_burned','burned_from_other','is_abroad','trip_day_number','num_entries','num_unique_campus','late_exit_flag','entry_during_weekend'
-]]
+X = insider_threat_data[['total_printed_pages','num_printed_pages_off_hours','total_files_burned','burned_from_other','is_abroad','trip_day_number','num_entries','num_unique_campus','late_exit_flag','entry_during_weekend']]
 
 y = insider_threat_data[['is_malicious']]
 
