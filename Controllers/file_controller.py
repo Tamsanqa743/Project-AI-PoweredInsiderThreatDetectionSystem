@@ -13,7 +13,6 @@ class file_controller:
     file.save(target)
 
 
-
-def get_filename(self):
-  '''returns name of uploaded file'''
-  return self.uploaded_filename
+  def get_filename(self):
+    '''returns name of uploaded file'''
+    return self.uploaded_filename
