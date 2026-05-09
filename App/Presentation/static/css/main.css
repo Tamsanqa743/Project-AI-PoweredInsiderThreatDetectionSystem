@@ -1,0 +1,52 @@
+body{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+}
+
+.headline-text{
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+img{
+  width: 100px;
+  height: 100px;
+}
+
+.content-container{
+  height: 100%;
+  justify-content: center;
+}
+
+#upload-form, .instruction-label{
+  display: flex;
+  justify-content: center;
+}
+
+.analysis-container{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.analysis-results{
+  height: 500px;
+  width: 70%;
+  display: flex;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #A9A9A9;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body%}
+
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="../static/images/logo.jpg" alt="Bootstrap" width="25" height="20">
+      <b name="headline-text">Insider Threat Detection</b>
+    </a>
+    
+  </div>
+</nav>
+<div class="content-container">
+    <div class="flex-column justify-content-center">
+        <p class="instruction-label mt-5 md-3 p-2 fw-medium"><b>Upload csv file to analyze for malicious behaviour</b></p>
+        <form method="POST" action="/upload" enctype="multipart/form-data" id="upload-form">
+            <input type="file" id="upload-file" name="file">
+            <button type="submit" class="btn btn-primary">Submit File</button>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}
