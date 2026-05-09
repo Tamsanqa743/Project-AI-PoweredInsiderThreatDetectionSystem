@@ -39,10 +39,12 @@ def upload():
 def analyse():
     '''start data analysis'''
     result = core_class.analyse(file_con.get_filename())
-    desription = result[1] # prediction explanation
+    description = result[1][0] # prediction explanation
+    prediction_confidence = result[1][1] # prediction confidence
+    
     prediction = result[0] # prediction result
     flash("Analysis Complete!", "success")
-    return render_template('analysis.html', prediction_description=desription, prediction_output=prediction, saved_filename=file_con.get_filename())
+    return render_template('analysis.html', prediction_description=description, prediction_output=prediction,prediction_confidence=prediction_confidence, saved_filename=file_con.get_filename())
 
 @app.route('/upload_new_file',methods=['POST'])
 def upload_new_file():

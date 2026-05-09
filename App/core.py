@@ -49,13 +49,12 @@ class Core:
 
             # make prediction
             prediction = model.predict_proba(input_data_frame_x)
-            # print("prediction:", prediction)
-            prediction_text = f"{prediction[0][class_index]: .2f}"
+            prediction_confidence = f"{prediction[0][class_index]*100: .2f}%"
             # print("Prediction text:", prediction_text)
 
 
             # explanation string
-            description = [f"Prediction: {prediction_text} (baseline: {base: .2f})\n"]
+            description = [] #[f"Prediction Confidence: {prediction_confidence} (baseline: {base: .2f})\n"]
 
             # rank features by absolute SHAP values to max of max_top_features
             top_feature_indices = np.argsort(-np.abs(to_sort_values[:,class_index]))[:max_top_features]
@@ -67,15 +66,9 @@ class Core:
             #     print("Value:", val[class_index])
             for feature in top_feature_indices:
                 contribution = feature_contributions_array[feature][class_index]
-                # determine whether feature increases or decreases prediction
-                # if contribution > 0:
-                #     prediction_direction = "increased"
-                # else:
-                #     prediction_direction = "decreased"
-
                 description.append(f"{self.user_friendly_category_names[input_data_frame_x.columns[feature]]} pushed behaviour prediction towards being {self.behaviour_dict[class_index]}\n")
 
-            return description
+            return description, prediction_confidence
         
 
     def predict_behaviour(self, model, input_data_frame):
