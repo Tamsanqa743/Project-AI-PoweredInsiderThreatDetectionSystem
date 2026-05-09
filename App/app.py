@@ -24,10 +24,14 @@ def index():
 def upload():
     '''handle file upload'''
     if request.method == 'POST':
+        if request.files['file'].filename == '': 
+            flash('No File Selected! Try Again', 'danger')
+            return render_template('index.html')
+
         file = request.files['file']
         file_con.file_upload(file, UPLOAD_FOLDER)
         filename = secure_filename(file.filename)
-        flash("Success")
+        flash("File Upload Successful", "success")
     return render_template('analysis.html', saved_filename=filename)
 
 
@@ -36,8 +40,8 @@ def analyse():
     '''start data analysis'''
     result = core_class.analyse(file_con.get_filename())
     desription = result[1] # prediction explanation
-    print("description",desription)
     prediction = result[0] # prediction result
+    flash("Analysis Complete!", "success")
     return render_template('analysis.html', prediction_description=desription, prediction_output=prediction, saved_filename=file_con.get_filename())
 
 if __name__ == "__main__":
