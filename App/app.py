@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, flash, jsonify
+from flask import Flask, render_template, url_for, request, flash, redirect
 from werkzeug.utils import secure_filename
 import os
 from Controllers.file_controller import file_controller
@@ -43,6 +43,11 @@ def analyse():
     prediction = result[0] # prediction result
     flash("Analysis Complete!", "success")
     return render_template('analysis.html', prediction_description=desription, prediction_output=prediction, saved_filename=file_con.get_filename())
+
+@app.route('/upload_new_file',methods=['POST'])
+def upload_new_file():
+    '''Redirect to upload page'''
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)
