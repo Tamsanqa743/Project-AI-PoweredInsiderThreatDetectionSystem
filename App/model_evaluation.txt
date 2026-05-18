@@ -1,0 +1,8 @@
+Random Forest Model Evaluation
+===============================
+
+Accuracy:  0.9705
+Precision: 0.8316
+Recall:    0.5563
+F1 Score:  0.6667
+

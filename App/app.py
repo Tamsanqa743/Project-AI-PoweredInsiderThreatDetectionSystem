@@ -1,6 +1,6 @@
+import os
 from flask import Flask, render_template, request, flash, redirect
 from werkzeug.utils import secure_filename
-import os
 from Controllers.file_controller import file_controller
 from Controllers.core_controller import core_controller
 

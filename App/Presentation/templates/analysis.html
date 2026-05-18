@@ -42,11 +42,11 @@
                    <div class="results-container">
                        <p class="mt-3 ms-3"><b>Threat Report</b></p>
                        <div class="mt-3 ms-3 prediction-breakdown">
-                           <p><b>User Behaviour: </b><span style="color: {% if prediction_output == 'Normal' %}green{% else %}red{% endif %};"><b>{{prediction_output}}</b></span></p>
-                           <p><b>Prediction Confidence:</b><b>{{prediction_confidence}}</b></p>
-                           <p><b>Key behaviours that influenced the prediction include:<br></p>
+                           <p><b>User Behaviour: </b><span style="color: {% if classification_output == 'Normal' %}green{% else %}red{% endif %};"><b>{{classification_output}}</b></span></p>
+                           <p><b>Classification Confidence:</b><b>{{classification_confidence}}</b></p>
+                           <p><b>Key risk indicators that influenced the classification:<br></p>
                                <ul>
-                                   {% for explanation in prediction_description %}
+                                   {% for explanation in classification_description %}
                                        <li>{{explanation}}</li>
                                    {% endfor %}
                                </ul>

@@ -4,6 +4,7 @@ import shap
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
+from metrics_exporter import metrics_exporter
 import warnings
 
 # surpress warnings
@@ -49,25 +50,16 @@ grid_searcher = GridSearchCV(
 
 )
 
-print("Performing Grid Search")
+print("Performing Grid Search...")
 
 # run grid search
 grid_searcher.fit(X_train, y_train)
 
 # filename trained model will be saved as
-filename = 'insider_threat_detector.joblib'
+filename = './models/insider_threat_detector.joblib'
 
 # filename for expected_value from explainer
 explainer_filename = 'explainer.joblib'
-
-# y_pred = random_forest_model.predict(X_test)
-
-# accuracy = accuracy_score(y_test, y_pred)
-# classification_rep = classification_report(y_test, y_pred)
-
-# print(f"Accuracy: {accuracy:.2f}")
-# print("\nClassification Report:\n", classification_rep)
-
 
 
 print("\nBest Parameters:")
@@ -85,29 +77,8 @@ joblib.dump(final_random_forest_model, filename)
 # initialize explainer
 prediction_explainer = shap.TreeExplainer(final_random_forest_model)
 
+# make predictions using test data
+y_pred = final_random_forest_model.predict(X_test) 
 
-y_pred = final_random_forest_model.predict(X_test)
-
-print("\nTest Accuracy:")
-print(accuracy_score(y_test, y_pred))
-
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
-
-new_data_2 = {
-    'total_printed_pages': 12,
-    'num_printed_pages_off_hours': 0,
-    'total_files_burned': 1,
-    'burned_from_other': 0,
-    'is_abroad': 0,
-    'trip_day_number': 0.0,
-    'num_entries': 4,
-    'num_unique_campus': 1,
-    'late_exit_flag': 0,
-    'entry_during_weekend': 0
-}
-
-new_df_2 = pd.DataFrame([new_data_2])
-
-predic = final_random_forest_model.predict(new_df_2)
-print('final pred:', predic[0])
+metrics_exporter.export_classification_metrics(y_test, y_pred) # export metrics for test data
+metrics_exporter.export_confusion_matrix_latex(y_test, y_pred, "confusion_matrix.tex") # export confusion matrix
