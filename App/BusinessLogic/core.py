@@ -4,7 +4,7 @@ import joblib
 
 
 
-class Core:
+class core:
     def __init__(self):
 
         # exported file names from training
@@ -36,10 +36,10 @@ class Core:
             'late_exit_flag': 'Late exits flag',
             'entry_during_weekend': 'Entry during the weekend'}
 
-        self.behaviour_dict = {1:'Malicious', 0: 'Normal'} # behaviour malicious or normal based on prediction
+        self.behaviour_dict = {1:'Malicious', 0: 'Normal'} # behaviour malicious or normal based on classification
 
 
-    def explain_prediction(self,model, shap_explainer, input_data_frame_x, max_top_features=5, class_index=1):
+    def explain_classification(self,model, shap_explainer, input_data_frame_x, max_top_features=5, class_index=1):
 
             feature_contributions_array = shap_explainer.shap_values(input_data_frame_x)[0] # feature contributions
             to_sort_values = feature_contributions_array # copy feature_contributions_array 
@@ -47,14 +47,14 @@ class Core:
             # average model output for random forest classifier
             base = shap_explainer.expected_value[class_index]
 
-            # make prediction
-            prediction = model.predict_proba(input_data_frame_x)
-            prediction_confidence = f"{prediction[0][class_index]*100: .2f}%"
-            # print("Prediction text:", prediction_text)
+            # make classification
+            classification = model.predict_proba(input_data_frame_x)
+            classification_confidence = f"{classification[0][class_index]*100: .2f}%"
+            # print("classification text:", classification_text)
 
 
             # explanation string
-            description = [] #[f"Prediction Confidence: {prediction_confidence} (baseline: {base: .2f})\n"]
+            description = [] #[f"classification Confidence: {classification_confidence} (baseline: {base: .2f})\n"]
 
             # rank features by absolute SHAP values to max of max_top_features
             top_feature_indices = np.argsort(-np.abs(to_sort_values[:,class_index]))[:max_top_features]
@@ -66,27 +66,27 @@ class Core:
             #     print("Value:", val[class_index])
             for feature in top_feature_indices:
                 contribution = feature_contributions_array[feature][class_index]
-                description.append(f"{self.user_friendly_category_names[input_data_frame_x.columns[feature]]} pushed behaviour prediction towards being {self.behaviour_dict[class_index]}\n")
+                description.append(f"{self.user_friendly_category_names[input_data_frame_x.columns[feature]]} pushed behaviour classification towards being {self.behaviour_dict[class_index]}\n")
 
-            return description, prediction_confidence
+            return description, classification_confidence
         
 
-    def predict_behaviour(self, model, input_data_frame):
+    def classify_behaviour(self, model, input_data_frame):
         '''predict behaviour and return result'''
-        return model.predict(input_data_frame)[0] # return prediction as number
+        return model.predict(input_data_frame)[0] # return classification as number
 
 
     def read_and_process_input_data(self,input_filename):
-        '''read csv and drop columns not used for prediction'''
+        '''read csv and drop columns not used for classification'''
         data_frame = pd.read_csv(input_filename)
         data_frame = data_frame.drop(columns=self.columns_to_drop)
         return data_frame
-    # returns array of prediction and description
+    # returns array of classification and description
 
     def analyse(self,ext_filename):
         df = self.read_and_process_input_data(self.upload_folder+ext_filename)
-        prediction = self.predict_behaviour(self.trained_model, df)
-        return self.behaviour_dict[prediction], self.explain_prediction(self.trained_model, self.explainer, df, 5, prediction)
+        classification = self.classify_behaviour(self.trained_model, df)
+        return self.behaviour_dict[classification], self.explain_classification(self.trained_model, self.explainer, df, 5, classification)
 
 
 
@@ -123,15 +123,15 @@ class Core:
 # new_df_2 = pd.DataFrame([new_data_2])
 
 
-# y_pred = trained_model.predict(new_df)[0] # extract prediction value into int
+# y_pred = trained_model.predict(new_df)[0] # extract classification value into int
 
 
-# print('first prediction', y_pred)
+# print('first classification', y_pred)
 # y_pred_2 = trained_model.predict(new_df_2)
-# print('second prediction:', y_pred_2)
+# print('second classification:', y_pred_2)
 
 
 
 
 
-# print("Expected Malicious prediction:", explain_prediction(self.trained_model, explainer, new_df_2,5, y_pred_2[0]))
+# print("Expected Malicious classification:", explain_classification(self.trained_model, explainer, new_df_2,5, y_pred_2[0]))

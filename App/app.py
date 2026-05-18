@@ -1,8 +1,8 @@
-from flask import Flask, render_template, url_for, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect
 from werkzeug.utils import secure_filename
 import os
 from Controllers.file_controller import file_controller
-from core import Core
+from Controllers.core_controller import core_controller
 
 template_dir = os.path.abspath('Presentation/templates/') # custom template directory path
 static_dir = os.path.abspath('Presentation/static/') # custom static directory path
@@ -11,7 +11,7 @@ ALLOWED_EXTENSIONS = {'csv'} # file extensions allowed for upload
 secret_key = 'DHEQJdxagshd2eg623829273273'
 
 file_con = file_controller()
-core_class = Core()
+core_con = core_controller()
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER # configure upload folder
@@ -38,13 +38,13 @@ def upload():
 @app.route('/analyse', methods=['POST'])
 def analyse():
     '''start data analysis'''
-    result = core_class.analyse(file_con.get_filename())
-    description = result[1][0] # prediction explanation
-    prediction_confidence = result[1][1] # prediction confidence
+    result = core_con.analyse_behaviour(file_con.get_filename())
+    description = result[1][0] # classification explanation
+    classification_confidence = result[1][1] # classification confidence
     
-    prediction = result[0] # prediction result
+    classification = result[0] # classification result
     flash("Analysis Complete!", "success")
-    return render_template('analysis.html', prediction_description=description, prediction_output=prediction,prediction_confidence=prediction_confidence, saved_filename=file_con.get_filename())
+    return render_template('analysis.html', classification_description=description, classification_output=classification,classification_confidence=classification_confidence, saved_filename=file_con.get_filename())
 
 @app.route('/upload_new_file',methods=['POST'])
 def upload_new_file():
