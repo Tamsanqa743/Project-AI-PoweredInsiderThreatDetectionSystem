@@ -59,7 +59,7 @@ grid_searcher.fit(X_train, y_train)
 filename = './models/insider_threat_detector.joblib'
 
 # filename for expected_value from explainer
-explainer_filename = 'explainer.joblib'
+explainer_filename = './models/explainer.joblib'
 
 
 print("\nBest Parameters:")
@@ -76,6 +76,8 @@ joblib.dump(final_random_forest_model, filename)
 
 # initialize explainer
 prediction_explainer = shap.TreeExplainer(final_random_forest_model)
+
+joblib.dump(prediction_explainer, explainer_filename)
 
 # make predictions using test data
 y_pred = final_random_forest_model.predict(X_test) 
