@@ -12,11 +12,7 @@ class core:
         self.parent_path = Path(__file__).parent/'..'
         self.model_filename = self.parent_path/'models/insider_threat_detector.joblib'
         print(os.path.curdir)
-        # shap_values_filename = 'computed_shap_values.joblib'
         self.explainer_filename = self.parent_path/'models/explainer.joblib'
-
-        # read in insider threat data
-        # insider_threat_data = pd.read_csv('insider_threat_clean_dataset.csv')
         self.upload_folder = './Uploaded_files/'
 
         # load trained model from file
@@ -53,8 +49,6 @@ class core:
             # make classification
             classification = model.predict_proba(input_data_frame_x)
             classification_confidence = f"{classification[0][class_index]*100: .2f}%"
-            # print("classification text:", classification_text)
-
 
             # explanation string
             description = []
@@ -65,7 +59,7 @@ class core:
             
             for feature in top_feature_indices:
                 contribution = feature_contributions_array[feature][class_index]
-                description.append(f"{self.user_friendly_category_names[input_data_frame_x.columns[feature]]} pushed behaviour classification towards being {self.behaviour_dict[class_index]}\n")
+                description.append(f"{self.user_friendly_category_names[input_data_frame_x.columns[feature]]}\n")
 
             return description, classification_confidence
         
