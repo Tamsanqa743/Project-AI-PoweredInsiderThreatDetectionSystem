@@ -43,9 +43,6 @@ class core:
             feature_contributions_array = shap_explainer.shap_values(input_data_frame_x)[0] # feature contributions
             to_sort_values = feature_contributions_array # copy feature_contributions_array 
 
-            # average model output for random forest classifier
-            base = shap_explainer.expected_value[class_index]
-
             # make classification
             classification = model.predict_proba(input_data_frame_x)
             classification_confidence = f"{classification[0][class_index]*100: .2f}%"
@@ -55,10 +52,8 @@ class core:
 
             # rank features by absolute SHAP values to max of max_top_features
             top_feature_indices = np.argsort(-np.abs(to_sort_values[:,class_index]))[:max_top_features]
-            sorted_feature_contributions = [(to_sort_values[i, 0], to_sort_values[i, class_index]) for i in top_feature_indices]
             
             for feature in top_feature_indices:
-                contribution = feature_contributions_array[feature][class_index]
                 description.append(f"{self.user_friendly_category_names[input_data_frame_x.columns[feature]]}\n")
 
             return description, classification_confidence

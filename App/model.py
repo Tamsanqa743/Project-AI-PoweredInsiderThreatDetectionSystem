@@ -3,7 +3,6 @@ import joblib
 import shap
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
 from metrics_exporter import metrics_exporter
 import warnings
 
