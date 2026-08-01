@@ -31,7 +31,7 @@
         <div class="analysis-container">
                <p class="mt-5 pt-4"><b>File for Analysis: {{saved_filename}}</b></p>
                <div class="control-btns">
-                    <button class="btn btn-primary mb-5" id="analyse-btn" type="submit" action="/analyse">Analyse File</button>
+                    <button class="btn btn-primary mb-5" id="analyse-btn" type="submit">Analyse File</button>
                     <form action="/upload_new_file" class="new-file ms-5" method="POST">
                        <button class="upload-new-file btn btn-secondary ml-5 mb-5">Upload New File</button>
                     </form>
@@ -41,13 +41,16 @@
        </div>
     </main>
     <script>
+        const container = document.getElementById('results')
+        const new_styling = 'height: 500px;width: 70%; opacity: 1;'; // make results container visible
+       
         document.getElementById('analyse-btn').addEventListener('click', function(event){
+            container.style.cssText = new_styling
             event.preventDefault();
-
-            fetch('/analyse2')
+            fetch('/analyse_data')
             .then(response=> response.json())
             .then(data =>{
-                document.getElementById('results').innerHTML = data.html_content;
+                container.innerHTML = data.html_content;
             })
             .catch(error => console.error("Error fetching data:", error));
         })

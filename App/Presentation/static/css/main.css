@@ -36,10 +36,9 @@ img{
   align-items: center;
 }
 
-.analysis-results{
-  height: 500px;
-  width: 70%;
+#analysis-results{
   display: flex;
+  opacity: 0;
 }
 
 input[type="file"]::file-selector-button {

@@ -35,26 +35,13 @@ def upload():
         flash("File Upload Successful", "success")
     return render_template('analysis.html', saved_filename=filename, display_results = display_results)
 
-
-@app.route('/analyse', methods=['POST'])
-def analyse():
-    '''start data analysis'''
-    result = core_con.analyse_behaviour(file_con.get_filename())
-    description = result[1][0] # classification explanation
-    classification_confidence = result[1][1] # classification confidence
-    
-    classification = result[0] # classification result
-    flash("Analysis Complete!", "success")
-    display_results = True # set flag to show results on page
-    return render_template('analysis.html', classification_description=description, classification_output=classification,classification_confidence=classification_confidence, saved_filename=file_con.get_filename(), display_results = display_results)
-
 @app.route('/upload_new_file',methods=['POST'])
 def upload_new_file():
     '''Redirect to upload page'''
     return redirect('/')
 
-@app.route('/analyse2', methods=['POST', 'GET'])
-def analyse2():
+@app.route('/analyse_data', methods=['POST', 'GET'])
+def analyse_data():
     '''start data analysis'''
     result = core_con.analyse_behaviour(file_con.get_filename())
     description = result[1][0] # classification explanation
@@ -76,7 +63,9 @@ def analyse2():
             <div class="mt-3 ms-3 prediction-breakdown"><p><b>User Behaviour: </b><span style="color: {classification_styling}"><b>{classification}</b>
                 </span></p><p><b>Classification Confidence:</b><b>{classification_confidence}</b></p>
                 <p><b>Key risk indicators that influenced the classification:<br></p>
-                {contributing_features_list}
+                <ul>
+                    {contributing_features_list}
+                </ul>
             </div>
         </div>
         '''
