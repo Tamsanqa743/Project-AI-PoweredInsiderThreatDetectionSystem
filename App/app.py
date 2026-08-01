@@ -9,6 +9,7 @@ static_dir = os.path.abspath('Presentation/static/') # custom static directory p
 UPLOAD_FOLDER = os.path.abspath('Uploaded_files/') # folder uploaded files are stored
 ALLOWED_EXTENSIONS = {'csv'} # file extensions allowed for upload
 secret_key = 'DHEQJdxagshd2eg623829273273'
+display_results = False
 
 file_con = file_controller()
 core_con = core_controller()
@@ -32,7 +33,7 @@ def upload():
         file_con.file_upload(file, UPLOAD_FOLDER)
         filename = secure_filename(file.filename)
         flash("File Upload Successful", "success")
-    return render_template('analysis.html', saved_filename=filename)
+    return render_template('analysis.html', saved_filename=filename, display_results = display_results)
 
 
 @app.route('/analyse', methods=['POST'])
@@ -44,7 +45,8 @@ def analyse():
     
     classification = result[0] # classification result
     flash("Analysis Complete!", "success")
-    return render_template('analysis.html', classification_description=description, classification_output=classification,classification_confidence=classification_confidence, saved_filename=file_con.get_filename())
+    display_results = True # set flag to show results on page
+    return render_template('analysis.html', classification_description=description, classification_output=classification,classification_confidence=classification_confidence, saved_filename=file_con.get_filename(), display_results = display_results)
 
 @app.route('/upload_new_file',methods=['POST'])
 def upload_new_file():
