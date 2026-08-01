@@ -48,7 +48,7 @@
                            <p><b>Key risk indicators that influenced the classification:<br></p>
                                <ul>
                                    {% for explanation in classification_description %}
-                                       <li>{{explanation}}</li>
+                                       <li ><span style="color: {% if classification_output == 'Normal' %}green{% else %}orange{% endif %};">{{explanation}}</span></li>
                                    {% endfor %}
                                </ul>
                        </div>
