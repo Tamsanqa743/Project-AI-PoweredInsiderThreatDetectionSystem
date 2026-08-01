@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, jsonify
 from werkzeug.utils import secure_filename
 from Controllers.file_controller import file_controller
 from Controllers.core_controller import core_controller
@@ -52,6 +52,35 @@ def analyse():
 def upload_new_file():
     '''Redirect to upload page'''
     return redirect('/')
+
+@app.route('/analyse2', methods=['POST', 'GET'])
+def analyse2():
+    '''start data analysis'''
+    result = core_con.analyse_behaviour(file_con.get_filename())
+    description = result[1][0] # classification explanation
+    classification_confidence = result[1][1] # classification confidence
+    
+    classification = result[0] # classification result
+    flash("Analysis Complete!", "success")
+
+    feature_styling = "green" if classification == "Normal" else "Orange"
+    classification_styling = "green" if classification == "Normal" else "red" 
+    contributing_features_list = ""
+
+    for feature in description:
+        contributing_features_list += f'<li style="color:{feature_styling}">{feature}</li>'
+
+    formatted_results_content = f'''
+        <div class="results-container">
+        <h3 class="mt-3 ms-3"><b>Threat Report</b></h3>
+            <div class="mt-3 ms-3 prediction-breakdown"><p><b>User Behaviour: </b><span style="color: {classification_styling}"><b>{classification}</b>
+                </span></p><p><b>Classification Confidence:</b><b>{classification_confidence}</b></p>
+                <p><b>Key risk indicators that influenced the classification:<br></p>
+                {contributing_features_list}
+            </div>
+        </div>
+        '''
+    return jsonify({"html_content":formatted_results_content})
 
 if __name__ == "__main__":
     app.run(debug=True)
